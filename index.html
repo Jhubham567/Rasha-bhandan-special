@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrate Raksha Bandhan</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three-gpu-particle-system@2.1.0/dist/three-gpu-particle-system.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three-gpu-particle-system@2.1.0/dist/three-gpu-particle-system.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300;400;700&display=swap');
+
+:root {
+    --primary-color: #FFD700;
+    --secondary-color: #FFA500;
+    --accent-color: #FF69B4;
+    --text-color: #333;
+    --background-color: #f0f0f0;
+    --card-background: rgba(255, 255, 255, 0.9);
+    --card-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    height: 100%;
+    overflow-x: hidden;
+}
+
+#canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.card {
+    background: var(--card-background);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.0);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 3em;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient 5s ease infinite;
+    background-size: 200% 200%;
+}
+
+@keyframes gradient {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+input, select, button {
+    font-family: 'Roboto', sans-serif;
+    width: 100%;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 25px;
+    background-color: #f0f0f0;
+    color: var(--text-color);
+    font-size: 1em;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-color);
+    transform: scale(1.02);
+}
+
+button {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
+.message {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.message:hover {
+    transform: scale(1.04);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.icon {
+    font-size: 2.5em;
+    margin: 10px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+}
+
+.icon:hover {
+    transform: scale(1.2) rotate(15deg);
+    filter: drop-shadow(0 0 10px gold);
+}
+
+.rakhi-3d {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.rakhi-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.rakhi-3d:hover .rakhi-inner {
+    transform: rotateY(180deg);
+}
+
+.rakhi-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+    background-size: cover;
+    background-position: center;
+}
+
+.rakhi-face.back {
+    transform: rotateY(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+}
+
+.hidden {
+    display: none;
+}
+
+#virtual-rakhi {
+    font-size: 1.2em;
+    font-weight: bold; /* Makes the text bold */
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    -webkit-background-clip: text;
+   
+    cursor: pointer;
+    margin-top: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+    padding: 15px 30px; /* Increased padding for better user interaction */
+    border: 2px solid transparent;
+    border-radius: 30px; /* More rounded corners for a smoother, friendlier look */
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
+                      linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+    text-align: center; /* Centering the text for a balanced look */
+    color: #ffffff; /* Default fallback color for text */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    user-select: none; /* Prevents text selection to enhance button feel */
+    touch-action: manipulation; /* Improves touch responsiveness */
+}
+
+#virtual-rakhi:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 35px rgba(255, 215, 0, 0.7); /* Enhanced glow effect */
+    color: #ffd700; /* Change text color to gold on hover */
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); /* Adds a subtle text glow */
+}
+
+/* Adding a focus effect for better accessibility */
+#virtual-rakhi:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8), 0 0 25px rgba(255, 215, 0, 0.4);
+    transform: scale(1.05);
+}
+
+/* Adding an active state for click interaction */
+#virtual-rakhi:active {
+    transform: scale(0.95); /* Slightly shrink the button to give a press effect */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Softer shadow on click */
+    background: linear-gradient(45deg, var(--secondary-color), var(--accent-color), var(--primary-color)); /* Subtle background color shift on click */
+}
+
+.footer {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.9em;
+    color: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+#gift-selection {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.gift-option {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-size: 2.5em;
+    margin: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.gift-option:hover {
+    transform: scale(1.2) rotate(15deg);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+#selected-gift {
+    margin-top: 20px;
+    font-size: 1.2em;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+#selected-gift:not(.hidden) {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.firework {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(20); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 2.5em;
+    }
+
+    .rakhi-3d {
+        width: 150px;
+        height: 150px;
+    }
+
+    .icon {
+        font-size: 2em;
+    }
+
+    .gift-option {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .rakhi-3d {
+        width: 120px;
+        height: 120px;
+    }
+
+    .icon {
+        font-size: 1.8em;
+    }
+
+    .gift-option {
+        font-size: 1.8em;
+    }
+
+    input, select, button {
+        padding: 12px 15px;
+    }
+}
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="container">
+        <div class="card" id="main-card">
+            <div id="input-section">
+                <h1>Celebrate Raksha Bandhan</h1>
+                <div class="input-group">
+                    <input type="text" id="name" placeholder="Enter your name">
+                    <select id="gender">
+                        <option value="">Select your role</option>
+                        <option value="brother">Brother</option>
+                        <option value="sister">Sister</option>
+                    </select>
+                    <button onclick="showGreeting()">Create Your Celebration</button>
+                </div>
+            </div>
+            <div id="greeting-section" class="hidden">
+                <h1 id="greeting-title"></h1>
+                <div class="rakhi-3d" onclick="flipRakhi()">
+                    <div class="rakhi-inner">
+                        <div class="rakhi-face front" style="background-image: url('https://www.multimediaqrcode.com//public/media/images_2-nj9cHD.jpeg');" aria-label="Decorative Rakhi image"></div>
+                        <div class="rakhi-face back">😊 thanks</div>
+                           
+                    </div>
+                </div>
+                <div id="message" class="message"></div>
+                <div class="icon-container" id="icons"></div>
+                <div id="virtual-rakhi" onclick="tieVirtualRakhi()"> 🌟 Tie a Virtual Rakhi 🌟</div>
+                <h3>Select your gift </h3>
+                <div id="gift-selection" class="hidden">
+                    <span class="gift-option" onclick="selectGift('🎁')">🎁</span>
+                    <span class="gift-option" onclick="selectGift('💐')">💐</span>
+                    <span class="gift-option" onclick="selectGift('🍫')">🍫</span>
+                    <span class="gift-option" onclick="selectGift('📚')">📚</span>
+                    <span class="gift-option" onclick="selectGift('🎵')">🎵</span>
+                </div>
+                <div id="selected-gift" class="hidden"></div>
+                <button onclick="resetPage()">Share Your Celebration</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">Created with ❤️ by shubham and claude for Raksha Bandhan 2024</div>
+
+    <script>
+        // Three.js background setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const starGeometry = new THREE.BufferGeometry();
+        const starMaterial = new THREE.PointsMaterial({color: 0xFFFFFF, size: 0.1});
+
+        const starVertices = [];
+        for (let i = 0; i < 10000; i++) {
+            const x = (Math.random() - 0.5) * 2000;
+            const y = (Math.random() - 0.5) * 2000;
+            const z = -Math.random() * 2000;
+            starVertices.push(x, y, z);
+        }
+
+        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+
+        camera.position.z = 1;
+
+        function animateStars() {
+            requestAnimationFrame(animateStars);
+            stars.rotation.y += 0.0002;
+            renderer.render(scene, camera);
+        }
+        animateStars();
+
+        // Greeting functionality
+        function showGreeting() {
+            const name = document.getElementById('name').value;
+            const gender = document.getElementById('gender').value;
+            
+            if (!name || !gender) {
+                alert('Please enter your name and select your role.');
+                return;
+            }
+            
+            document.getElementById('input-section').classList.add('hidden');
+            document.getElementById('greeting-section').classList.remove('hidden');
+            
+            const greetingTitle = document.getElementById('greeting-title');
+            const message = document.getElementById('message');
+            const icons = document.getElementById('icons');
+            
+            greetingTitle.textContent = `Happy Raksha Bandhan, ${name}!`;
+            
+            if (gender === 'brother') {
+                message.textContent = `Dear Brother ${name}, on this special day, we celebrate the unbreakable bond we share. Your strength, protection, and love mean the world to me. May our relationship continue to grow stronger with each passing year. Thank you for always being there for me.`;
+                icons.innerHTML = '<span class="icon" onclick="showEmoji(this)">💪</span><span class="icon" onclick="showEmoji(this)">🛡️</span><span class="icon" onclick="showEmoji(this)">🤝</span>';
+            } else {message.textContent = `Dearest Sister ${name}, Raksha Bandhan is a celebration of our eternal bond. Your love, care, and support have always been my strength. I promise to always be there for you, protecting and cherishing our special connection. May your life be filled with joy and success.`;
+                icons.innerHTML = '<span class="icon" onclick="showEmoji(this)">💖</span><span class="icon" onclick="showEmoji(this)">🌺</span><span class="icon" onclick="showEmoji(this)">🎀</span>';
+            }
+            
+            // Animations
+            gsap.from("#main-card", {scale: 0.8, opacity: 0, duration: 1, ease: "back.out(1.7)"});
+            gsap.from("#greeting-title", {opacity: 0, y: -30, duration: 1, delay: 0.5});
+            gsap.from(".rakhi-3d", {opacity: 0, scale: 0, rotation: 720, duration: 1.5, delay: 0.8});
+            gsap.from("#message", {opacity: 0, y: 30, duration: 1, delay: 1.2});
+            gsap.from(".icon", {opacity: 0, scale: 0, duration: 0.5, stagger: 0.2, delay: 1.5});
+            gsap.from("#virtual-rakhi", {opacity: 0, y: 20, duration: 1, delay: 2});
+        }
+        
+        function tieVirtualRakhi() {
+            const virtualRakhi = document.getElementById('virtual-rakhi');
+            virtualRakhi.innerHTML = '🌟 Virtual Rakhi Tied! 🌟';
+            gsap.to(".rakhi-inner", {rotationY: "+=360", duration: 1});
+            confetti();
+            document.getElementById('gift-selection').classList.remove('hidden');
+        }
+        
+        function resetPage() {
+            document.getElementById('name').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('input-section').classList.remove('hidden');
+            document.getElementById('greeting-section').classList.add('hidden');
+            document.getElementById('gift-selection').classList.add('hidden');
+            document.getElementById('selected-gift').classList.add('hidden');
+            document.getElementById('virtual-rakhi').innerHTML = '🌟 Tie a Virtual Rakhi 🌟';
+            alert('Your celebration is ready to be shared! Send this page to your sibling to show your love!');
+        }
+
+        function flipRakhi() {
+            const rakhiInner = document.querySelector('.rakhi-inner');
+            rakhiInner.style.transform = rakhiInner.style.transform === 'rotateY(180deg)' ? 'rotateY(0deg)' : 'rotateY(180deg)';
+        }
+
+        function showEmoji(element) {
+            const emoji = element.innerHTML;
+            const mainCard = document.getElementById('main-card');
+            const emojiElement = document.createElement('div');
+            emojiElement.innerHTML = emoji;
+            emojiElement.style.position = 'absolute';
+            emojiElement.style.fontSize = '5em';
+            emojiElement.style.left = Math.random() * (mainCard.offsetWidth - 50) + 'px';
+            emojiElement.style.top = Math.random() * (mainCard.offsetHeight - 50) + 'px';
+            emojiElement.style.opacity = '0';
+            mainCard.appendChild(emojiElement);
+
+            gsap.to(emojiElement, {
+                opacity: 1,
+                y: -100,
+                duration: 1,
+                ease: "power1.out",
+                onComplete: () => mainCard.removeChild(emojiElement)
+            });
+        }
+
+        function selectGift(gift) {
+            const selectedGift = document.getElementById('selected-gift');
+            selectedGift.innerHTML = `You selected: ${gift}`;
+            selectedGift.classList.remove('hidden');
+            createFireworks();
+        }
+
+        function createFireworks() {
+            const mainCard = document.getElementById('main-card');
+            for (let i = 0; i < 20; i++) {
+                const firework = document.createElement('div');
+                firework.classList.add('firework');
+                firework.style.left = Math.random() * mainCard.offsetWidth + 'px';
+                firework.style.top = Math.random() * mainCard.offsetHeight + 'px';
+                firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                mainCard.appendChild(firework);
+
+                gsap.to(firework, {
+                    scale: 0,
+                    opacity: 0,
+                    duration: 1,
+                    delay: Math.random(),
+                    onComplete: () => mainCard.removeChild(firework)
+                });
+            }
+        }
+
+        function confetti() {
+            const colors = ['#FFD700', '#FFA500', '#FF69B4', '#00CED1'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.borderRadius = '50%';
+                document.body.appendChild(confetti);
+
+                gsap.to(confetti, {
+                    y: window.innerHeight + 10,
+                    x: "+=" + (Math.random() * 200 - 100),
+                    rotation: Math.random() * 360,
+                    duration: Math.random() * 2 + 1,
+                    ease: "power1.out",
+                    onComplete: () => document.body.removeChild(confetti)
+                });
+            }
+        }
+
+        // Responsive design
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Add ambient sound
+        const ambientSound = new Audio('https://www.multimediaqrcode.com/public/media/raksha_bandhan_melody_1-FWPBix.mp3');
+        ambientSound.loop = true;
+        ambientSound.volume = 0.3;
+
+        document.body.addEventListener('click', () => {
+            ambientSound.play();
+        }, { once: true });
+
+        // Add particle system
+        const particleSystem = new GPUParticleSystem({
+            maxParticles: 250000,
+            particleNoiseTex: new THREE.TextureLoader().load('/public/media/perlin_15_-_512x512-I5uk3.png'),
+            particleSpriteTex: new THREE.TextureLoader().load('https://static.vecteezy.com/system/resources/thumbnails/024/045/143/small_2x/gold-confetti-particles-free-png.png')
+        });
+        scene.add(particleSystem);
+
+        const particleOptions = {
+            position: new THREE.Vector3(),
+            positionRandomness: 0.3,
+            velocity: new THREE.Vector3(),
+            velocityRandomness: 0.5,
+            color: 0xaa88ff,
+            colorRandomness: 0.2,
+            turbulence: 0.1,
+            lifetime: 2,
+            size: 5,
+            sizeRandomness: 1
+        };
+
+        let tick = 0;
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+
+            const time = Date.now() * 0.001;
+            particleSystem.update(tick);
+
+            particleOptions.position.x = Math.sin(time * 0.1) * 10;
+            particleOptions.position.y = Math.cos(time * 0.2) * 10;
+            particleOptions.position.z = Math.cos(time * 0.3) * 10;
+
+            for (let i = 0; i < 1000; i++) {
+                particleSystem.spawnParticle(particleOptions);
+            }
+
+            tick += 0.01;
+        }
+        animateParticles();
+    </script>
+</body>
+</html>
